@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Habico: The Habit Rock</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+      /* Style for the modern "wipe" theme transition */
+      :root {
+        --wipe-x: 50%;
+        --wipe-y: 50%;
+        --habico-blue-color: #3B82F6;
+        --habico-green-color: #16A34A;
+        --habico-yellow-color: #CA8A04;
+      }
+
+      .dark {
+        --habico-blue-color: #60A5FA;
+        --habico-green-color: #4ADE80;
+        --habico-yellow-color: #FACC15;
+      }
+
+      @keyframes reveal-down {
+        from { clip-path: circle(0% at var(--wipe-x) var(--wipe-y)); }
+        to { clip-path: circle(150vmax at var(--wipe-x) var(--wipe-y)); }
+      }
+
+      ::view-transition-old(root) {
+        animation: none;
+      }
+
+      ::view-transition-new(root) {
+        animation: reveal-down 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+      }
+
+      /* Disable animations if user prefers reduced motion */
+      @media (prefers-reduced-motion: reduce) {
+        .animate-bubble-in, .animate-bubble-out, .animate-button-press {
+          animation: none !important;
+        }
+      }
+      
+      /* Styles for TextType component */
+      .text-type {
+        display: inline-block;
+        white-space: pre-wrap;
+        text-align: center; /* Ensure text remains centered */
+      }
+
+      .text-type__cursor {
+        margin-left: 0.25rem;
+        display: inline-block;
+        opacity: 1;
+      }
+
+      .text-type__cursor--hidden {
+        display: none;
+      }
+      
+      /* Glow effect for rock during survey */
+      @keyframes rock-glow-effect {
+        0% { filter: drop-shadow(0 0 0px var(--habico-yellow-color)); }
+        50% { filter: drop-shadow(0 0 15px var(--habico-yellow-color)); }
+        100% { filter: drop-shadow(0 0 0px var(--habico-yellow-color)); }
+      }
+      .rock-glow {
+        animation: rock-glow-effect 500ms ease-in-out;
+      }
+
+      /* Pulse effect for paywall rock */
+      @keyframes glow-pulse {
+        0%, 100% { filter: drop-shadow(0 0 10px var(--habico-yellow-color)); }
+        50% { filter: drop-shadow(0 0 20px var(--habico-yellow-color)); }
+      }
+      .glow-pulse {
+        animation: glow-pulse 3s ease-in-out infinite;
+      }
+
+      /* Custom scrollbar for chat */
+      .custom-scrollbar::-webkit-scrollbar {
+        width: 6px;
+      }
+      .custom-scrollbar::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      .dark .custom-scrollbar::-webkit-scrollbar-thumb {
+        background-color: #334155; /* dark-habico-border */
+        border-radius: 10px;
+      }
+      .custom-scrollbar::-webkit-scrollbar-thumb {
+        background-color: #E5E7EB; /* gray-200 */
+        border-radius: 10px;
+      }
+
+      /* Cage shattering animation for Rewire Journey */
+      .cage-bar {
+        transition: transform 0.8s cubic-bezier(0.6, -0.28, 0.735, 0.045), opacity 0.6s ease-out;
+        transform-origin: center;
+      }
+      .shattered .cage-bar-1 {
+        transform: rotate(35deg) translate(150px, -120px) scale(1.1);
+        opacity: 0;
+      }
+      .shattered .cage-bar-2 {
+        transform: rotate(15deg) translate(80px, -150px) scale(1.1);
+        opacity: 0;
+      }
+      .shattered .cage-bar-3 {
+        transform: rotate(-10deg) translate(-80px, -150px) scale(1.1);
+        opacity: 0;
+      }
+      .shattered .cage-bar-4 {
+        transform: rotate(-45deg) translate(-150px, -120px) scale(1.1);
+        opacity: 0;
+      }
+      .shattered .cage-bar-5 {
+        transform: rotate(55deg) translate(150px, 120px) scale(1.1);
+        opacity: 0;
+      }
+      .shattered .cage-bar-6 {
+        transform: rotate(-65deg) translate(-150px, 120px) scale(1.1);
+        opacity: 0;
+      }
+
+      /* Habit Clock dot animation */
+      @keyframes fade-in-pop {
+        0% { opacity: 0; transform: scale(0.5); }
+        100% { opacity: 1; transform: scale(1); }
+      }
+      .habit-dot, .habit-dot-center {
+        animation: fade-in-pop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+      }
+
+    </style>
+
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
+            },
+            colors: {
+              /* Light Theme */
+              'habico-background': '#FDFCFB',
+              'habico-card': '#FFFFFF',
+              'habico-text-primary': '#1F2937',
+              'habico-text-secondary': '#6B7280',
+              'habico-blue': '#3B82F6',
+              'habico-red': '#EF4444',
+              'habico-journal-bubble': '#FFF7ED',
+              'habico-speech-bubble': '#E0F2FE',
+              'habico-border': '#F3F4F6',
+              /* Dark Theme */
+              'dark-habico-background': '#0F172A',
+              'dark-habico-card': '#1E293B',
+              'dark-habico-text-primary': '#F1F5F9',
+              'dark-habico-text-secondary': '#94A3B8',
+              'dark-habico-blue': '#60A5FA',
+              'dark-habico-red': '#F87171',
+              'dark-habico-journal-bubble': '#334155',
+              'dark-habico-speech-bubble': '#374151',
+              'dark-habico-border': '#334155',
+            },
+            animation: {
+              'bubble-in': 'bubble-in 240ms ease-out both',
+              'bubble-out': 'bubble-out 180ms ease-in both',
+              'button-press': 'button-press 200ms ease-in-out',
+              'progress-pulse': 'progress-pulse 600ms cubic-bezier(0.4, 0, 0.2, 1)',
+              'float': 'float-animation 6s ease-in-out infinite',
+            },
+            keyframes: {
+              'bubble-in': {
+                '0%':   { opacity: '0', transform: 'scale(0.92)' },
+                '100%': { opacity: '1', transform: 'scale(1)' }
+              },
+              'bubble-out': {
+                '0%':   { opacity: '1', transform: 'scale(1)' },
+                '100%': { opacity: '0', transform: 'scale(0.92)' }
+              },
+              'button-press': {
+                '0%, 100%': { transform: 'scale(1)' },
+                '50%': { transform: 'scale(0.96)' },
+              },
+              'progress-pulse': {
+                '0%, 100%': { transform: 'scale(1)' },
+                '50%': { transform: 'scale(1.02)' },
+              },
+              'float-animation': {
+                '0%, 100%': { transform: 'translateY(0px)' },
+                '50%': { transform: 'translateY(-15px)' },
+              },
+            },
+          },
+        },
+      }
+    </script>
+
+    <script type="importmap">
+{
+  "imports": {
+    "react": "https://aistudiocdn.com/react@^19.1.1",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.1.1/",
+    "react/": "https://aistudiocdn.com/react@^19.1.1/",
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.20.0",
+    "os": "https://aistudiocdn.com/os@^0.1.2",
+    "gsap": "https://aistudiocdn.com/gsap@^3.13.0",
+    "html2canvas": "https://aistudiocdn.com/html2canvas@^1.4.1",
+    "gsap/": "https://aistudiocdn.com/gsap@^3.13.0/"
+  }
+}
+</script>
+  <link rel="stylesheet" href="/index.css">
+</head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+  </body>
+</html>

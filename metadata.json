@@ -1,0 +1,5 @@
+{
+  "name": "Habico: The Habit Rock",
+  "description": "A habit-tracking application where your daily progress is visually represented by cleaning a rock over a 90-day cycle. Resist temptations to polish the rock, or give in and see it get muddy again. Features AI-powered motivational messages from the rock itself.",
+  "requestFramePermissions": []
+}
